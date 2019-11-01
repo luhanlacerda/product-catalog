@@ -1,0 +1,113 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+<f:view>
+    <h:head>
+        <h:outputStylesheet library="css" name="users.css"/>
+    </h:head>
+    <h:body>
+        <p:outputPanel>
+            <div class="ui-g">
+                <div class="ui-g-12" style="text-align: center">
+                    <h:outputText value="Welcome #{loginMBean.user.name}"/>
+                    <br/>
+                    <p:commandButton value="Logout" action="#{loginMBean.logOff}"/>
+                    <br/>
+                    <br/>
+                    <h3>Users</h3>
+                </div>
+                <div class="ui-g-1"/>
+                <div class="ui-g-10">
+                    <h:form id="form-users">
+                        <p:growl id="growl" sticky="true"/>
+                        <p:dataTable id="list-users" var="user" value="#{userMBean.users}" reflow="true" rows="5"
+                                     paginator="true">
+                            <p:column headerText="Name">
+                                <p:inputText id="input-name" value="#{user.name}"/>
+                            </p:column>
+                            <p:column headerText="Email">
+                                <p:outputLabel id="label-email" styleClass="label-email" value="#{user.email}"/>
+                            </p:column>
+
+                            <p:column headerText="First Phone Number">
+                                <p:inputMask value="#{user.phones.get(0).fullNumber}" mask="(99) 99999-999?9"/>
+                            </p:column>
+                            <p:column headerText="First Phone Type">
+                                <p:inputText value="#{user.phones.get(0).type}"/>
+                            </p:column>
+
+                            <p:column headerText="Second Phone Number">
+                                <p:inputMask value="#{user.phones.get(1).fullNumber}" mask="(99) 99999-999?9"/>
+                            </p:column>
+                            <p:column headerText="Second Phone Type">
+                                <p:inputText value="#{user.phones.get(1).type}"/>
+                            </p:column>
+                            <p:column>
+                                <p:commandButton update="list-users" value="Delete" icon="ui-icon-closethick"
+                                                 action="#{userMBean.delete(user)}"
+                                                 styleClass="ui-state-error">
+                                </p:commandButton>
+                            </p:column>
+                        </p:dataTable>
+                        <br/>
+                        <p:commandButton style="float: right" id="save" value="Save" styleClass="ui-priority-primary"
+                                         action="#{userMBean.update}" icon="ui-icon-disk" update="growl">
+                            <f:ajax execute="@form" render="@form"/>
+                        </p:commandButton>
+
+                    </h:form>
+                </div>
+                <div class="ui-g-1">
+                </div>
+            </div>
+            <h3>Create a new user</h3>
+            <div class="ui-g">
+                <div class="ui-g-2">
+                </div>
+                <div class="ui-g-8">
+                    <h:form id="form-create-user">
+                        <p:growl id="growl-create-user" />
+                        <h:panelGrid columns="3" cellpadding="5" style="margin: 0 auto;">
+                            <p:outputLabel for="name" value="Name"/>
+                            <p:inputText id="name" value="#{userMBean.user.name}"/>
+                            <p:message for="name"/>
+
+                            <p:outputLabel for="email" value="Email"/>
+                            <p:inputText id="email"
+                                         value="#{userMBean.user.email}">
+                            </p:inputText>
+                            <p:message for="email"/>
+
+                            <p:outputLabel for="password" value="Password"/>
+                            <p:password id="password" value="#{userMBean.user.password}"/>
+                            <p:message for="password"/>
+                            <p:outputLabel for="phone-number" value="First Phone Number"/>
+                            <p:inputMask id="phone-number" mask="(99) 99999-999?9"
+                                         value="#{userMBean.firstPhone.fullNumber}"/>
+                            <p:message for="phone-number"/>
+                            <p:outputLabel for="phone-type" value="First Phone Type"/>
+                            <p:inputText id="phone-type" value="#{userMBean.firstPhone.type}"/>
+                            <p:message for="phone-type"/>
+                            <p:outputLabel for="phone2-number" value="Second Phone Number"/>
+                            <p:inputMask id="phone2-number" mask="(99) 99999-999?9"
+                                         value="#{userMBean.secondPhone.fullNumber}"/>
+                            <p:message for="phone2-number"/>
+                            <p:outputLabel for="phone2-type" value="Second Phone Type"/>
+                            <p:inputText id="phone2-type" value="#{userMBean.secondPhone.type}"/>
+                            <p:message for="phone2-type"/>
+                            <p:commandButton update="@form :form-users:list-users @form :form-create-user" value="Add"
+                                             action="#{userMBean.addUser}">
+                            </p:commandButton>
+                        </h:panelGrid>
+                    </h:form>
+                </div>
+                <div class="ui-g-2">
+                </div>
+            </div>
+        </p:outputPanel>
+    </h:body>
+</f:view>
+</html>
+
